@@ -10,6 +10,16 @@ interface Book {
   title: string
   author: string
   isbn?: string | null
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  rating?: number | null
+  coverUrl?: string | null
+}
+
+interface BookFormData {
+  title: string
+  author: string
+  isbn?: string | null
   startDate?: Date | null
   endDate?: Date | null
   rating?: number | null
@@ -18,7 +28,7 @@ interface Book {
 
 interface BookFormProps {
   book?: Book | null
-  onSubmit: (book: Omit<Book, 'id'>) => Promise<void>
+  onSubmit: (book: BookFormData) => Promise<void>
   onCancel: () => void
   isLoading?: boolean
 }

@@ -24,6 +24,16 @@ interface Book {
   coverUrl?: string | null
 }
 
+interface BookFormData {
+  title: string
+  author: string
+  isbn?: string | null
+  startDate?: Date | null
+  endDate?: Date | null
+  rating?: number | null
+  coverUrl?: string | null
+}
+
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [showBookForm, setShowBookForm] = useState(false)
