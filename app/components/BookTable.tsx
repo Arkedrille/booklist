@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Star, Search, Plus, Edit2, Trash2, Calendar, BookOpen, User, SortAsc, SortDesc } from 'lucide-react'
+import { Star, Search, Plus, Edit2, Trash2, BookOpen, SortAsc, SortDesc } from 'lucide-react'
 import Image from 'next/image'
 
 interface Book {
@@ -14,9 +14,11 @@ interface Book {
   endDate?: Date | string | null
   rating?: number | null
   coverUrl?: string | null
-  createdAt: Date | string
-  updatedAt: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
+
+type ReadingStatus = 'read' | 'reading' | 'to-read'
 
 interface BookTableProps {
   onAddBook: () => void
@@ -31,7 +33,7 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'read' | 'reading' | 'to-read'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | ReadingStatus>('all')
   const [sortField, setSortField] = useState<SortField>('createdAt')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
 
@@ -126,7 +128,7 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
   )
 
   const filteredAndSortedBooks = useMemo(() => {
-    let filtered = books.filter(book => {
+    const filtered = books.filter(book => {
       const matchesSearch = 
         book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         book.author.toLowerCase().includes(searchTerm.toLowerCase())
@@ -137,9 +139,9 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
       return matchesSearch && status === statusFilter
     })
 
-    filtered.sort((a, b) => {
-      let aValue: any = a[sortField]
-      let bValue: any = b[sortField]
+    const sorted = [...filtered].sort((a, b) => {
+      let aValue: string | number | Date | null = a[sortField] as string | number | Date | null
+      let bValue: string | number | Date | null = b[sortField] as string | number | Date | null
 
       // Gestion spéciale pour les dates
       if (sortField === 'startDate' || sortField === 'endDate' || sortField === 'createdAt') {
@@ -150,7 +152,7 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
       // Gestion spéciale pour les chaînes
       if (typeof aValue === 'string') {
         aValue = aValue.toLowerCase()
-        bValue = bValue?.toLowerCase() || ''
+        bValue = bValue?.toString().toLowerCase() || ''
       }
 
       // Gestion des valeurs nulles
@@ -312,7 +314,9 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
                             onError={(e) => {
                               const target = e.target as HTMLImageElement
                               target.style.display = 'none'
-                              target.nextElementSibling?.classList.remove('hidden')
+                              if (target.nextElementSibling) {
+                                (target.nextElementSibling as HTMLElement).classList.remove('hidden')
+                              }
                             }}
                           />
                         ) : null}

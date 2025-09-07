@@ -10,6 +10,18 @@ interface Book {
   title: string
   author: string
   isbn?: string | null
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  rating?: number | null
+  coverUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+interface BookFormData {
+  title: string
+  author: string
+  isbn?: string | null
   startDate?: Date | null
   endDate?: Date | null
   rating?: number | null
@@ -17,8 +29,19 @@ interface Book {
 }
 
 interface BookFormProps {
-  book?: Book | null
-  onSubmit: (book: Omit<Book, 'id'>) => Promise<void>
+  book?: {
+    id?: string
+    title: string
+    author: string
+    isbn?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    rating?: number | null
+    coverUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  } | null
+  onSubmit: (book: BookFormData) => Promise<void>
   onCancel: () => void
   isLoading?: boolean
 }
@@ -28,8 +51,8 @@ export default function BookForm({ book, onSubmit, onCancel, isLoading = false }
     title: book?.title || '',
     author: book?.author || '',
     isbn: book?.isbn || '',
-    startDate: book?.startDate ? new Date(book.startDate).toISOString().split('T')[0] : '',
-    endDate: book?.endDate ? new Date(book.endDate).toISOString().split('T')[0] : '',
+    startDate: book?.startDate ? (typeof book.startDate === 'string' ? book.startDate.split('T')[0] : new Date(book.startDate).toISOString().split('T')[0]) : '',
+    endDate: book?.endDate ? (typeof book.endDate === 'string' ? book.endDate.split('T')[0] : new Date(book.endDate).toISOString().split('T')[0]) : '',
     rating: book?.rating || null,
     coverUrl: book?.coverUrl || ''
   })
@@ -39,7 +62,7 @@ export default function BookForm({ book, onSubmit, onCancel, isLoading = false }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    const bookData: BookFormData = {
+    const bookData = {
       title: formData.title,
       author: formData.author,
       isbn: formData.isbn || null,

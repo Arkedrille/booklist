@@ -22,6 +22,18 @@ interface Book {
   endDate?: Date | string | null
   rating?: number | null
   coverUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+interface BookFormData {
+  title: string
+  author: string
+  isbn?: string | null
+  startDate?: Date | null
+  endDate?: Date | null
+  rating?: number | null
+  coverUrl?: string | null
 }
 
 export default function DashboardPage() {
