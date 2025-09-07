@@ -10,16 +10,6 @@ interface Book {
   title: string
   author: string
   isbn?: string | null
-  startDate?: Date | string | null
-  endDate?: Date | string | null
-  rating?: number | null
-  coverUrl?: string | null
-}
-
-interface BookFormData {
-  title: string
-  author: string
-  isbn?: string | null
   startDate?: Date | null
   endDate?: Date | null
   rating?: number | null
@@ -28,7 +18,7 @@ interface BookFormData {
 
 interface BookFormProps {
   book?: Book | null
-  onSubmit: (book: BookFormData) => Promise<void>
+  onSubmit: (book: Omit<Book, 'id'>) => Promise<void>
   onCancel: () => void
   isLoading?: boolean
 }
@@ -197,7 +187,7 @@ export default function BookForm({ book, onSubmit, onCancel, isLoading = false }
                   placeholder="978-2-xxxx-xxxx-x"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  L'ISBN aide à trouver automatiquement la bonne couverture
+                  L&apos;ISBN aide à trouver automatiquement la bonne couverture
                 </p>
               </div>
 

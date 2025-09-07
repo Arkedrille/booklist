@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 // GET /api/books/[id] - Récupérer un livre spécifique de l'utilisateur
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = getUserFromRequest(request)
   
@@ -20,9 +20,10 @@ export async function GET(
   }
 
   try {
+    const { id } = await params
     const book = await prisma.book.findFirst({
       where: { 
-        id: params.id,
+        id: id,
         userId: user.userId // S'assurer que le livre appartient à l'utilisateur
       }
     })
@@ -47,7 +48,7 @@ export async function GET(
 // PUT /api/books/[id] - Modifier un livre de l'utilisateur
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = getUserFromRequest(request)
   
@@ -59,12 +60,13 @@ export async function PUT(
   }
 
   try {
+    const { id } = await params
     const data = await request.json()
     
     // Vérifier que le livre appartient à l'utilisateur
     const existingBook = await prisma.book.findFirst({
       where: { 
-        id: params.id,
+        id: id,
         userId: user.userId
       }
     })
@@ -95,7 +97,7 @@ export async function PUT(
     }
     
     const book = await prisma.book.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         title: data.title,
         author: data.author,
@@ -120,7 +122,7 @@ export async function PUT(
 // DELETE /api/books/[id] - Supprimer un livre de l'utilisateur
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = getUserFromRequest(request)
   
@@ -132,10 +134,12 @@ export async function DELETE(
   }
 
   try {
+    const { id } = await params
+    
     // Vérifier que le livre appartient à l'utilisateur avant de le supprimer
     const existingBook = await prisma.book.findFirst({
       where: { 
-        id: params.id,
+        id: id,
         userId: user.userId
       }
     })
@@ -148,7 +152,7 @@ export async function DELETE(
     }
     
     await prisma.book.delete({
-      where: { id: params.id }
+      where: { id: id }
     })
     
     return NextResponse.json({ message: 'Livre supprimé avec succès' })

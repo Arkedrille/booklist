@@ -66,12 +66,12 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
 
   const getStatusBadge = (book: Book) => {
     const status = getReadingStatus(book)
-    const styles = {
+    const styles: Record<ReadingStatus, string> = {
       'read': 'bg-green-100 text-green-800',
       'reading': 'bg-blue-100 text-blue-800',
       'to-read': 'bg-gray-100 text-gray-800'
     }
-    const labels = {
+    const labels: Record<ReadingStatus, string> = {
       'read': 'Lu',
       'reading': 'En cours',
       'to-read': 'À lire'
@@ -164,7 +164,7 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
       }
     })
 
-    return filtered
+    return sorted
   }, [books, searchTerm, statusFilter, sortField, sortDirection])
 
   const stats = useMemo(() => {
@@ -253,7 +253,7 @@ export default function BookTable({ onAddBook, onEditBook, onDeleteBook }: BookT
             
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
+              onChange={(e) => setStatusFilter(e.target.value as 'all' | ReadingStatus)}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">Tous les statuts</option>

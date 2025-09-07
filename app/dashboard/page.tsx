@@ -24,16 +24,6 @@ interface Book {
   coverUrl?: string | null
 }
 
-interface BookFormData {
-  title: string
-  author: string
-  isbn?: string | null
-  startDate?: Date | null
-  endDate?: Date | null
-  rating?: number | null
-  coverUrl?: string | null
-}
-
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [showBookForm, setShowBookForm] = useState(false)
@@ -43,26 +33,26 @@ export default function DashboardPage() {
   const router = useRouter()
 
   useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
-    try {
-      const response = await fetch('/api/auth/me')
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data.user)
-      } else {
-        // Non authentifié, rediriger vers la page de connexion
+    const checkUserAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me')
+        if (response.ok) {
+          const data = await response.json()
+          setUser(data.user)
+        } else {
+          // Non authentifié, rediriger vers la page de connexion
+          router.push('/')
+        }
+      } catch (error) {
+        console.error('Erreur lors de la vérification auth:', error)
         router.push('/')
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error('Erreur lors de la vérification auth:', error)
-      router.push('/')
-    } finally {
-      setIsLoading(false)
     }
-  }
+    
+    checkUserAuth()
+  }, [router])
 
   const handleLogout = async () => {
     try {

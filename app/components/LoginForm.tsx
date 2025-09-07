@@ -133,7 +133,7 @@ export default function LoginForm() {
           <div className="mt-6 text-center text-sm text-gray-600">
             <p>Première visite ?</p>
             <p className="text-xs mt-1">
-              Contactez l'administrateur pour obtenir vos identifiants
+              Contactez l&apos;administrateur pour obtenir vos identifiants
             </p>
           </div>
         </div>
