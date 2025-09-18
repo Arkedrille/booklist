@@ -9,7 +9,8 @@
 "lint": "eslint",
 "create-user": "npx tsx scripts/create-user.ts",
 "manage-users": "npx tsx scripts/manage-users.ts",
-"postinstall": "prisma generate"
+"postinstall": "prisma generate",
+"migrate-data": "npx tsx scripts/migrate-mysql-data.ts"
  },
 "dependencies": {
 "@hookform/resolvers": "^5.2.1",
